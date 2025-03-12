@@ -57,21 +57,21 @@ Proyecto de Desarrollo de aplicaiones y servicios WEB
 
 *Flujo de la informacion*
     El flujo de información desde la perspectiva de cada tipo de usuario (producto mínimo viable) se describe a continuación:
-    **Usuario Común:**
-    1. **Login:** El usuario introduce sus credenciales para acceder a la aplicación.
-    2. **Visualización de Listas:** Tras el login, el usuario visualiza un listado de sus listas creadas.
-    3. **Creación de Lista:** El usuario puede crear nuevas listas, definiendo título y descripción.
-    4. **Visualización de Ítems en Lista:** Al seleccionar una lista, el usuario accede a la vista detallada de la lista, que muestra los ítems asociados.
-    5. **Creación de Ítem:** Dentro de una lista, el usuario puede crear nuevos ítems, asignándoles título, descripción, estado y etiquetas.
-    6. **Edición y Eliminación de Ítems:** El usuario puede modificar o eliminar ítems existentes en una lista.
-    7. **Filtrado y Ordenamiento de Ítems:** El usuario puede aplicar filtros por etiquetas y estados, y ordenar los ítems dentro de la lista.
-    8. **Logout:** El usuario puede cerrar sesión en la aplicación.
+        **Usuario Común:**
+        1. **Login:** El usuario introduce sus credenciales para acceder a la aplicación.
+        2. **Visualización de Listas:** Tras el login, el usuario visualiza un listado de sus listas creadas.
+        3. **Creación de Lista:** El usuario puede crear nuevas listas, definiendo título y descripción.
+        4. **Visualización de Ítems en Lista:** Al seleccionar una lista, el usuario accede a la vista detallada de la lista, que muestra los ítems asociados.
+        5. **Creación de Ítem:** Dentro de una lista, el usuario puede crear nuevos ítems, asignándoles título, descripción, estado y etiquetas.
+        6. **Edición y Eliminación de Ítems:** El usuario puede modificar o eliminar ítems existentes en una lista.
+        7. **Filtrado y Ordenamiento de Ítems:** El usuario puede aplicar filtros por etiquetas y estados, y ordenar los ítems dentro de la lista.
+        8. **Logout:** El usuario puede cerrar sesión en la aplicación.
     **Administrador:**
-    1. **Login:** El administrador introduce sus credenciales de administrador.
-    2. **Acceso a Gestión de Usuarios:** El administrador puede acceder a una sección para gestionar usuarios (consultar, eliminar, modificar roles).
-    3. **Acceso a Gestión de Productos (Contexto Extendido):** El administrador puede gestionar el catálogo de productos.
-    4. **Acceso a Ventas (Contexto Extendido):** El administrador puede consultar informes de ventas.
-    5. **Funcionalidades de Usuario Común:** El administrador también tiene acceso a todas las funcionalidades de un usuario común para gestionar listas e ítems.
+        1. **Login:** El administrador introduce sus credenciales de administrador.
+        2. **Acceso a Gestión de Usuarios:** El administrador puede acceder a una sección para gestionar usuarios (consultar, eliminar, modificar roles).
+        3. **Acceso a Gestión de Productos (Contexto Extendido):** El administrador puede gestionar el catálogo de productos.
+        4. **Acceso a Ventas (Contexto Extendido):** El administrador puede consultar informes de ventas.
+        5. **Funcionalidades de Usuario Común:** El administrador también tiene acceso a todas las funcionalidades de un usuario común para gestionar listas e ítems.
 
 *Tecnologias a utilizar*
     * **Front-end:** HTML, CSS (Bootstrap para estilos responsivos), JavaScript.
