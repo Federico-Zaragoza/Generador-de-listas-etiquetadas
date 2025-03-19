@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista Personalizada - Generador de Listas Etiquetadas</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .filter-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .filter-group {
+            border-left: 3px solid #0d6efd;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+        .tag {
+            background-color: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            margin-right: 4px;
+        }
+        .preview-item {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegación principal (reusada) -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-list-check me-2"></i>
+                Lista Etiquetada
+            </a>
+            <div class="d-flex align-items-center">
+                <div class="dropdown">
+                    <button class="btn btn-link text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle fa-lg"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Perfil</a></li>
+                        <li><a class="dropdown-item" href="#">Configuración</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Panel de Filtros -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="fas fa-filter me-2"></i>
+                            Configuración de Vista
+                        </h5>
+
+                        <!-- Nombre de la vista -->
+                        <div class="mb-4">
+                            <label class="form-label">Nombre de la Vista</label>
+                            <input type="text" class="form-control" placeholder="Mi vista personalizada">
+                        </div>
+
+                        <!-- Filtros -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">Filtros</h6>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-plus me-1"></i>Agregar Filtro
+                                </button>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="mb-3">
+                                    <label class="form-label">Estado</label>
+                                    <select class="form-select">
+                                        <option value="active">Activo</option>
+                                        <option value="pending">Pendiente</option>
+                                        <option value="inactive">Inactivo</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="mb-3">
+                                    <label class="form-label">Etiquetas</label>
+                                    <select class="form-select">
+                                        <option value="any">Cualquier etiqueta</option>
+                                        <option value="all">Todas las etiquetas</option>
+                                        <option value="none">Sin etiquetas</option>
+                                    </select>
+                                    <div class="mt-2">
+                                        <span class="tag">#trabajo</span>
+                                        <span class="tag">#urgente</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ordenamiento -->
+                        <div class="mb-4">
+                            <h6 class="mb-3">Ordenamiento</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Ordenar por</label>
+                                <select class="form-select mb-2">
+                                    <option>Fecha de creación</option>
+                                    <option>Título</option>
+                                    <option>Estado</option>
+                                </select>
+                                <select class="form-select">
+                                    <option>Ascendente</option>
+                                    <option>Descendente</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Guardar Vista
+                            </button>
+                            <button class="btn btn-outline-secondary">
+                                <i class="fas fa-undo me-2"></i>Restablecer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vista Previa -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="fas fa-eye me-2"></i>
+                            Vista Previa
+                        </h5>
+
+                        <!-- Items filtrados -->
+                        <div class="preview-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">Completar informe mensual</h6>
+                                <span class="badge bg-success">Activo</span>
+                            </div>
+                            <p class="text-muted mb-2 small">Creado: 15 Mar 2024</p>
+                            <div>
+                                <span class="tag">#trabajo</span>
+                                <span class="tag">#urgente</span>
+                            </div>
+                        </div>
+
+                        <div class="preview-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">Reunión de equipo</h6>
+                                <span class="badge bg-warning">Pendiente</span>
+                            </div>
+                            <p class="text-muted mb-2 small">Creado: 14 Mar 2024</p>
+                            <div>
+                                <span class="tag">#trabajo</span>
+                            </div>
+                        </div>
+
+                        <!-- Paginación -->
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

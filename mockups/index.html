@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Listas Etiquetadas - Mockups</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+        .tag {
+            background-color: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            margin-right: 4px;
+        }
+        .item-card {
+            border: 1px solid #dee2e6;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+        .status-active {
+            color: #198754;
+        }
+        .status-inactive {
+            color: #dc3545;
+        }
+        .status-pending {
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navegación principal -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-list-check me-2"></i>
+            Lista Etiquetada
+        </a>
+        <div class="d-flex align-items-center">
+            <div class="input-group me-3">
+                <input type="text" class="form-control" placeholder="Buscar...">
+                <button class="btn btn-outline-secondary">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-link text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-user-circle fa-lg"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                    <li><a class="dropdown-item" href="#">Configuración</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 sidebar p-3">
+            <div class="mb-4">
+                <h6 class="text-muted text-uppercase mb-3">Mis Listas</h6>
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-star me-2"></i>Favoritas
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-archive me-2"></i>Archivadas
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-plus me-2"></i>Nueva Lista
+                    </a>
+                </div>
+            </div>
+            
+            <div>
+                <h6 class="text-muted text-uppercase mb-3">Etiquetas</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="tag">#trabajo</span>
+                    <span class="tag">#personal</span>
+                    <span class="tag">#urgente</span>
+                    <span class="tag">+Nueva</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido Principal -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4>Lista de Tareas</h4>
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Nuevo Item
+                </button>
+            </div>
+
+            <!-- Filtros -->
+            <div class="mb-4">
+                <div class="btn-group">
+                    <button class="btn btn-outline-secondary active">Todos</button>
+                    <button class="btn btn-outline-secondary">Activos</button>
+                    <button class="btn btn-outline-secondary">Pendientes</button>
+                    <button class="btn btn-outline-secondary">Inactivos</button>
+                </div>
+            </div>
+
+            <!-- Lista de Items -->
+            <div class="item-card p-3 mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Completar informe mensual</h5>
+                    <span class="status-active">
+                        <i class="fas fa-check-circle"></i> Activo
+                    </span>
+                </div>
+                <p class="text-muted mb-2">Preparar el informe de ventas del mes de marzo</p>
+                <div>
+                    <span class="tag">#trabajo</span>
+                    <span class="tag">#urgente</span>
+                </div>
+            </div>
+
+            <div class="item-card p-3 mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Llamar al cliente</h5>
+                    <span class="status-pending">
+                        <i class="fas fa-clock"></i> Pendiente
+                    </span>
+                </div>
+                <p class="text-muted mb-2">Coordinar reunión de seguimiento</p>
+                <div>
+                    <span class="tag">#trabajo</span>
+                    <span class="tag">#cliente</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
