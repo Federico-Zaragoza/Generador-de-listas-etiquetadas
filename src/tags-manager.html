@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Etiquetas - Generador de Listas Etiquetadas</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="styles/main.css" rel="stylesheet">
+    <link href="styles/tags-manager.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-list-check me-2"></i>
+                Lista Etiquetada
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <!-- Search Bar -->
+                <form class="d-flex mx-auto" style="min-width: 300px; max-width: 500px;">
+                    <div class="input-group">
+                        <input type="search" class="form-control" placeholder="Buscar listas..." aria-label="Search">
+                        <button class="btn btn-light" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Right Navigation Items -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-bell"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                2
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                            <li><h6 class="dropdown-header">Notificaciones</h6></li>
+                            <li><a class="dropdown-item" href="#">Nueva lista compartida</a></li>
+                            <li><a class="dropdown-item" href="#">Actualización en lista "Tareas"</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-primary" href="#">Ver todas</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Perfil</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configuración</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-tags me-2"></i>Etiquetas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid">
+                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#newTagModal">
+                                <i class="fas fa-plus me-2"></i>Nueva Etiqueta
+                            </button>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Buscar etiquetas..." id="tagSearchInput">
+                            <button class="btn btn-outline-secondary" type="button" id="tagSearchBtn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div>
+                            <h6 class="mb-2">Filtrar por:</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="showAllTags" checked>
+                                <label class="form-check-label" for="showAllTags">
+                                    Todas las etiquetas
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="showMostUsed" checked>
+                                <label class="form-check-label" for="showMostUsed">
+                                    Más utilizadas
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="showRecentlyUsed" checked>
+                                <label class="form-check-label" for="showRecentlyUsed">
+                                    Usadas recientemente
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Card -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Estadísticas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Total de Etiquetas:</span>
+                            <span class="badge bg-primary rounded-pill">18</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Etiquetas en uso:</span>
+                            <span class="badge bg-success rounded-pill">12</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Sin utilizar:</span>
+                            <span class="badge bg-warning rounded-pill">6</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Gestión de Etiquetas</h5>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary active" id="gridViewBtn">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" id="listViewBtn">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Grid View -->
+                        <div id="gridView" class="tag-grid">
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
+                                <!-- Example Tags -->
+                                <div class="col">
+                                    <div class="card h-100 tag-card" style="border-color: #0d6efd;">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h5 class="card-title mb-0">
+                                                    <span class="badge" style="background-color: #0d6efd;">Trabajo</span>
+                                                </h5>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-link text-dark" data-bs-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editTagModal" data-tag-id="1"><i class="fas fa-edit me-2"></i>Editar</a></li>
+                                                        <li><a class="dropdown-item" href="#" data-tag-id="1"><i class="fas fa-palette me-2"></i>Cambiar Color</a></li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item text-danger" href="#" data-tag-id="1"><i class="fas fa-trash me-2"></i>Eliminar</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="tag-usage mb-2">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <small>Uso</small>
+                                                    <small>24 items</small>
+                                                </div>
+                                                <div class="progress" style="height: 5px;">
+                                                    <div class="progress-bar" role="progressbar" style="width: 80%; background-color: #0d6efd;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="tag-lists">
+                                                <small class="text-muted">Usado en 5 listas</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card h-100 tag-card" style="border-color: #198754;">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h5 class="card-title mb-0">
+                                                    <span class="badge" style="background-color: #198754;">Personal</span>
+                                                </h5>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-link text-dark" data-bs-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editTagModal" data-tag-id="2"><i class="fas fa-edit me-2"></i>Editar</a></li>
+                                                        <li><a class="dropdown-item" href="#" data-tag-id="2"><i class="fas fa-palette me-2"></i>Cambiar Color</a></li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item text-danger" href="#" data-tag-id="2"><i class="fas fa-trash me-2"></i>Eliminar</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="tag-usage mb-2">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <small>Uso</small>
+                                                    <small>18 items</small>
+                                                </div>
+                                                <div class="progress" style="height: 5px;">
+                                                    <div class="progress-bar" role="progressbar" style="width: 60%; background-color: #198754;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="tag-lists">
+                                                <small class="text-muted">Usado en 3 listas</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card h-100 tag-card" style="border-color: #ffc107;">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h5 class="card-title mb-0">
+                                                    <span class="badge" style="background-color: #ffc107; color: #212529;">Compras</span>
+                                                </h5>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-link text-dark" data-bs-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editTagModal" data-tag-id="3"><i class="fas fa-edit me-2"></i>Editar</a></li>
+                                                        <li><a class="dropdown-item" href="#" data-tag-id="3"><i class="fas fa-palette me-2"></i>Cambiar Color</a></li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item text-danger" href="#" data-tag-id="3"><i class="fas fa-trash me-2"></i>Eliminar</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="tag-usage mb-2">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <small>Uso</small>
+                                                    <small>12 items</small>
+                                                </div>
+                                                <div class="progress" style="height: 5px;">
+                                                    <div class="progress-bar" role="progressbar" style="width: 40%; background-color: #ffc107;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="tag-lists">
+                                                <small class="text-muted">Usado en 2 listas</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card h-100 tag-card" style="border-color: #dc3545;">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h5 class="card-title mb-0">
+                                                    <span class="badge" style="background-color: #dc3545;">Urgente</span>
+                                                </h5>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-link text-dark" data-bs-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editTagModal" data-tag-id="4"><i class="fas fa-edit me-2"></i>Editar</a></li>
+                                                        <li><a class="dropdown-item" href="#" data-tag-id="4"><i class="fas fa-palette me-2"></i>Cambiar Color</a></li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item text-danger" href="#" data-tag-id="4"><i class="fas fa-trash me-2"></i>Eliminar</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="tag-usage mb-2">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <small>Uso</small>
+                                                    <small>8 items</small>
+                                                </div>
+                                                <div class="progress" style="height: 5px;">
+                                                    <div class="progress-bar" role="progressbar" style="width: 25%; background-color: #dc3545;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="tag-lists">
+                                                <small class="text-muted">Usado en 4 listas</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- List View (hidden by default) -->
+                        <div id="listView" class="d-none">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Etiqueta</th>
+                                            <th scope="col">Uso</th>
+                                            <th scope="col">Listas</th>
+                                            <th scope="col">Último uso</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <span class="badge" style="background-color: #0d6efd; font-size: 1rem;">Trabajo</span>
+                                            </td>
+                                            <td>24 items</td>
+                                            <td>5 listas</td>
+                                            <td>Hace 2 horas</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editTagModal" data-tag-id="1">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-primary" data-tag-id="1">
+                                                        <i class="fas fa-palette"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-danger" data-tag-id="1">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="badge" style="background-color: #198754; font-size: 1rem;">Personal</span>
+                                            </td>
+                                            <td>18 items</td>
+                                            <td>3 listas</td>
+                                            <td>Ayer</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editTagModal" data-tag-id="2">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-primary" data-tag-id="2">
+                                                        <i class="fas fa-palette"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-danger" data-tag-id="2">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="badge" style="background-color: #ffc107; color: #212529; font-size: 1rem;">Compras</span>
+                                            </td>
+                                            <td>12 items</td>
+                                            <td>2 listas</td>
+                                            <td>Hace 3 días</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editTagModal" data-tag-id="3">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-primary" data-tag-id="3">
+                                                        <i class="fas fa-palette"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-danger" data-tag-id="3">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="badge" style="background-color: #dc3545; font-size: 1rem;">Urgente</span>
+                                            </td>
+                                            <td>8 items</td>
+                                            <td>4 listas</td>
+                                            <td>Hace 1 semana</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editTagModal" data-tag-id="4">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-primary" data-tag-id="4">
+                                                        <i class="fas fa-palette"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-danger" data-tag-id="4">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tag Analytics Section -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Análisis de Etiquetas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="mb-3">Uso de Etiquetas</h6>
+                                <div class="chart-container" style="height: 250px;">
+                                    <!-- This would be a chart in a real app. For this prototype, we'll use a placeholder -->
+                                    <div class="bg-light rounded p-3 text-center h-100 d-flex align-items-center justify-content-center">
+                                        <div>
+                                            <i class="fas fa-chart-pie fa-3x mb-3 text-primary"></i>
+                                            <p>Gráfico de uso de etiquetas</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="mb-3">Tendencia de Uso</h6>
+                                <div class="chart-container" style="height: 250px;">
+                                    <!-- This would be a chart in a real app. For this prototype, we'll use a placeholder -->
+                                    <div class="bg-light rounded p-3 text-center h-100 d-flex align-items-center justify-content-center">
+                                        <div>
+                                            <i class="fas fa-chart-line fa-3x mb-3 text-primary"></i>
+                                            <p>Gráfico de tendencia de uso</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Tag Modal -->
+    <div class="modal fade" id="newTagModal" tabindex="-1" aria-labelledby="newTagModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newTagModalLabel">Crear Nueva Etiqueta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newTagForm" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="tagName" class="form-label">Nombre de la Etiqueta</label>
+                            <input type="text" class="form-control" id="tagName" required>
+                            <div class="invalid-feedback">
+                                Por favor ingresa un nombre para la etiqueta.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tagColor" class="form-label">Color</label>
+                            <div class="d-flex">
+                                <input type="color" class="form-control form-control-color me-2" id="tagColor" value="#0d6efd">
+                                <div class="tag-preview p-2 rounded d-flex align-items-center justify-content-center" style="flex-grow: 1; background-color: #0d6efd; color: white;">
+                                    <span id="tagPreview">Previsualización</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tagDescription" class="form-label">Descripción (opcional)</label>
+                            <textarea class="form-control" id="tagDescription" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveTagBtn">Crear Etiqueta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Tag Modal -->
+    <div class="modal fade" id="editTagModal" tabindex="-1" aria-labelledby="editTagModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTagModalLabel">Editar Etiqueta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editTagForm" class="needs-validation" novalidate>
+                        <input type="hidden" id="editTagId">
+                        <div class="mb-3">
+                            <label for="editTagName" class="form-label">Nombre de la Etiqueta</label>
+                            <input type="text" class="form-control" id="editTagName" value="Trabajo" required>
+                            <div class="invalid-feedback">
+                                Por favor ingresa un nombre para la etiqueta.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editTagColor" class="form-label">Color</label>
+                            <div class="d-flex">
+                                <input type="color" class="form-control form-control-color me-2" id="editTagColor" value="#0d6efd">
+                                <div class="tag-preview p-2 rounded d-flex align-items-center justify-content-center" style="flex-grow: 1; background-color: #0d6efd; color: white;">
+                                    <span id="editTagPreview">Trabajo</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editTagDescription" class="form-label">Descripción (opcional)</label>
+                            <textarea class="form-control" id="editTagDescription" rows="2">Etiqueta para tareas relacionadas con el trabajo.</textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="updateTagBtn">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/tags-manager.js"></script>
+</body>
+</html> 

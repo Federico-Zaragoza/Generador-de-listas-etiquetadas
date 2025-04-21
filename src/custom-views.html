@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vistas Personalizadas - Generador de Listas Etiquetadas</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="styles/main.css" rel="stylesheet">
+    <link href="styles/custom-views.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Multiselect Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+</head>
+<body class="bg-light">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-list-check me-2"></i>
+                Lista Etiquetada
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <!-- Search Bar -->
+                <form class="d-flex mx-auto" style="min-width: 300px; max-width: 500px;">
+                    <div class="input-group">
+                        <input type="search" class="form-control" placeholder="Buscar listas..." aria-label="Search">
+                        <button class="btn btn-light" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Right Navigation Items -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-bell"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                2
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                            <li><h6 class="dropdown-header">Notificaciones</h6></li>
+                            <li><a class="dropdown-item" href="#">Nueva lista compartida</a></li>
+                            <li><a class="dropdown-item" href="#">Actualización en lista "Tareas"</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-primary" href="#">Ver todas</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Perfil</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configuración</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Vistas Guardadas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid">
+                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#newViewModal">
+                                <i class="fas fa-plus me-2"></i>Nueva Vista
+                            </button>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Buscar vistas..." id="viewSearchInput">
+                            <button class="btn btn-outline-secondary" type="button" id="viewSearchBtn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Saved Views List -->
+                        <div class="list-group saved-views-list">
+                            <a href="#" class="list-group-item list-group-item-action active" data-view-id="1">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Tareas Pendientes</h6>
+                                        <small class="text-muted">Todas las listas • Estado: Pendiente</small>
+                                    </div>
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action" data-view-id="2">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Tareas del Trabajo</h6>
+                                        <small class="text-muted">Etiqueta: Trabajo • Cualquier estado</small>
+                                    </div>
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action" data-view-id="3">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Tareas Urgentes</h6>
+                                        <small class="text-muted">Etiqueta: Urgente • Pendientes</small>
+                                    </div>
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action" data-view-id="4">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Compras</h6>
+                                        <small class="text-muted">Etiqueta: Compras • Lista: Supermercado</small>
+                                    </div>
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Card -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Estadísticas Rápidas</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="itemsStatsChart" height="200"></canvas>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Total de Items:</span>
+                            <span class="badge bg-primary rounded-pill">42</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Completados:</span>
+                            <span class="badge bg-success rounded-pill">28</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Pendientes:</span>
+                            <span class="badge bg-warning rounded-pill">14</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-md-9">
+                <!-- Current View Info -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="mb-1" id="currentViewTitle">Tareas Pendientes</h4>
+                                <p class="text-muted mb-0" id="currentViewDescription">Muestra todas las tareas que están en estado pendiente de todas tus listas.</p>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-primary" id="editViewBtn" data-bs-toggle="modal" data-bs-target="#editViewModal">
+                                    <i class="fas fa-edit me-1"></i>Editar
+                                </button>
+                                <button class="btn btn-outline-secondary" id="shareViewBtn">
+                                    <i class="fas fa-share-alt me-1"></i>Compartir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Filtros Activos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="active-filters mb-3">
+                            <span class="badge rounded-pill bg-primary me-2">
+                                Estado: Pendiente
+                                <button type="button" class="btn-close btn-close-white ms-2" aria-label="Close"></button>
+                            </span>
+                            <span class="badge rounded-pill bg-primary me-2">
+                                Todas las Listas
+                                <button type="button" class="btn-close btn-close-white ms-2" aria-label="Close"></button>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <select class="form-select" id="statusFilter">
+                                    <option value="">Estado: Todos</option>
+                                    <option value="pending" selected>Estado: Pendiente</option>
+                                    <option value="completed">Estado: Completado</option>
+                                    <option value="inactive">Estado: Inactivo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <select class="form-select" id="listFilter">
+                                    <option value="all" selected>Todas las Listas</option>
+                                    <option value="1">Tareas del Trabajo</option>
+                                    <option value="2">Compras del Supermercado</option>
+                                    <option value="3">Proyecto Web</option>
+                                    <option value="4">Películas por Ver</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <select class="selectpicker form-select" id="tagFilter" multiple data-selected-text-format="count" title="Etiquetas: Todas">
+                                    <option value="1" data-content="<span class='badge' style='background-color: #0d6efd;'>Trabajo</span>">Trabajo</option>
+                                    <option value="2" data-content="<span class='badge' style='background-color: #198754;'>Personal</span>">Personal</option>
+                                    <option value="3" data-content="<span class='badge' style='background-color: #ffc107; color: #212529;'>Compras</span>">Compras</option>
+                                    <option value="4" data-content="<span class='badge' style='background-color: #dc3545;'>Urgente</span>">Urgente</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <button class="btn btn-outline-secondary" id="clearFiltersBtn">
+                                <i class="fas fa-eraser me-1"></i>Limpiar Filtros
+                            </button>
+                            <button class="btn btn-primary" id="applyFiltersBtn">
+                                <i class="fas fa-filter me-1"></i>Aplicar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Area -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Resultados</h5>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary active" id="listViewBtn">
+                                <i class="fas fa-list"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" id="boardViewBtn">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- List View -->
+                        <div id="listView">
+                            <div class="table-responsive">
+                                <table class="table table-hover items-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="width: 40px;">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="selectAllItems">
+                                                </div>
+                                            </th>
+                                            <th scope="col">Tarea</th>
+                                            <th scope="col">Lista</th>
+                                            <th scope="col">Etiquetas</th>
+                                            <th scope="col">Estado</th>
+                                            <th scope="col">Fecha de Vencimiento</th>
+                                            <th scope="col" style="width: 100px;">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Example Items -->
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <input class="form-check-input item-checkbox" type="checkbox" value="1">
+                                                </div>
+                                            </td>
+                                            <td>Llamar al cliente sobre el proyecto</td>
+                                            <td>Tareas del Trabajo</td>
+                                            <td>
+                                                <span class="badge" style="background-color: #0d6efd;">Trabajo</span>
+                                                <span class="badge" style="background-color: #dc3545;">Urgente</span>
+                                            </td>
+                                            <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+                                            <td>Hoy</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-outline-secondary edit-item-btn" data-item-id="1" data-bs-toggle="tooltip" title="Editar">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-danger delete-item-btn" data-item-id="1" data-bs-toggle="tooltip" title="Eliminar">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <input class="form-check-input item-checkbox" type="checkbox" value="2">
+                                                </div>
+                                            </td>
+                                            <td>Enviar propuesta de proyecto</td>
+                                            <td>Tareas del Trabajo</td>
+                                            <td>
+                                                <span class="badge" style="background-color: #0d6efd;">Trabajo</span>
+                                            </td>
+                                            <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+                                            <td>Mañana</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-outline-secondary edit-item-btn" data-item-id="2" data-bs-toggle="tooltip" title="Editar">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-danger delete-item-btn" data-item-id="2" data-bs-toggle="tooltip" title="Eliminar">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <input class="form-check-input item-checkbox" type="checkbox" value="3">
+                                                </div>
+                                            </td>
+                                            <td>Comprar leche y huevos</td>
+                                            <td>Compras del Supermercado</td>
+                                            <td>
+                                                <span class="badge" style="background-color: #ffc107; color: #212529;">Compras</span>
+                                            </td>
+                                            <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+                                            <td>Viernes</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-outline-secondary edit-item-btn" data-item-id="3" data-bs-toggle="tooltip" title="Editar">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-danger delete-item-btn" data-item-id="3" data-bs-toggle="tooltip" title="Eliminar">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <input class="form-check-input item-checkbox" type="checkbox" value="4">
+                                                </div>
+                                            </td>
+                                            <td>Revisar pull request del equipo</td>
+                                            <td>Proyecto Web</td>
+                                            <td>
+                                                <span class="badge" style="background-color: #0d6efd;">Trabajo</span>
+                                                <span class="badge" style="background-color: #dc3545;">Urgente</span>
+                                            </td>
+                                            <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+                                            <td>Jueves</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-outline-secondary edit-item-btn" data-item-id="4" data-bs-toggle="tooltip" title="Editar">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-danger delete-item-btn" data-item-id="4" data-bs-toggle="tooltip" title="Eliminar">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div class="bulk-actions" style="display: none;">
+                                    <div class="btn-group">
+                                        <button class="btn btn-outline-primary" id="markCompletedBtn">
+                                            <i class="fas fa-check me-1"></i>Marcar como completada
+                                        </button>
+                                        <button class="btn btn-outline-warning" id="markPendingBtn">
+                                            <i class="fas fa-clock me-1"></i>Marcar como pendiente
+                                        </button>
+                                        <button class="btn btn-outline-danger" id="deleteSelectedBtn">
+                                            <i class="fas fa-trash me-1"></i>Eliminar seleccionados
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center m-0">
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+                                        </li>
+                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">Siguiente</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <!-- Board View (hidden by default) -->
+                        <div id="boardView" class="d-none">
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <div class="card border-warning">
+                                        <div class="card-header bg-warning text-dark">
+                                            <h5 class="mb-0">Pendiente</h5>
+                                        </div>
+                                        <div class="list-group list-group-flush">
+                                            <div class="list-group-item">
+                                                <h6 class="mb-1">Llamar al cliente sobre el proyecto</h6>
+                                                <div class="mb-2">
+                                                    <span class="badge" style="background-color: #0d6efd;">Trabajo</span>
+                                                    <span class="badge" style="background-color: #dc3545;">Urgente</span>
+                                                </div>
+                                                <small class="text-muted">Tareas del Trabajo • Hoy</small>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <h6 class="mb-1">Enviar propuesta de proyecto</h6>
+                                                <div class="mb-2">
+                                                    <span class="badge" style="background-color: #0d6efd;">Trabajo</span>
+                                                </div>
+                                                <small class="text-muted">Tareas del Trabajo • Mañana</small>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <h6 class="mb-1">Comprar leche y huevos</h6>
+                                                <div class="mb-2">
+                                                    <span class="badge" style="background-color: #ffc107; color: #212529;">Compras</span>
+                                                </div>
+                                                <small class="text-muted">Compras del Supermercado • Viernes</small>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <h6 class="mb-1">Revisar pull request del equipo</h6>
+                                                <div class="mb-2">
+                                                    <span class="badge" style="background-color: #0d6efd;">Trabajo</span>
+                                                    <span class="badge" style="background-color: #dc3545;">Urgente</span>
+                                                </div>
+                                                <small class="text-muted">Proyecto Web • Jueves</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card border-success">
+                                        <div class="card-header bg-success text-white">
+                                            <h5 class="mb-0">Completado</h5>
+                                        </div>
+                                        <div class="list-group list-group-flush">
+                                            <div class="list-group-item text-center p-4">
+                                                <p class="text-muted mb-0">No hay tareas completadas</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card border-secondary">
+                                        <div class="card-header bg-secondary text-white">
+                                            <h5 class="mb-0">Inactivo</h5>
+                                        </div>
+                                        <div class="list-group list-group-flush">
+                                            <div class="list-group-item text-center p-4">
+                                                <p class="text-muted mb-0">No hay tareas inactivas</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New View Modal -->
+    <div class="modal fade" id="newViewModal" tabindex="-1" aria-labelledby="newViewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newViewModalLabel">Crear Nueva Vista Personalizada</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newViewForm" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="viewName" class="form-label">Nombre de la Vista</label>
+                            <input type="text" class="form-control" id="viewName" placeholder="Ej: Mis tareas urgentes" required>
+                            <div class="invalid-feedback">
+                                Por favor ingresa un nombre para la vista.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="viewDescription" class="form-label">Descripción (opcional)</label>
+                            <textarea class="form-control" id="viewDescription" rows="2" placeholder="Breve descripción de la vista"></textarea>
+                        </div>
+                        
+                        <hr>
+                        <h6 class="mb-3">Criterios de Filtrado</h6>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="viewStatusFilter" class="form-label">Estado</label>
+                                <select class="form-select" id="viewStatusFilter">
+                                    <option value="">Todos los estados</option>
+                                    <option value="pending">Pendiente</option>
+                                    <option value="completed">Completado</option>
+                                    <option value="inactive">Inactivo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="viewListFilter" class="form-label">Lista</label>
+                                <select class="form-select" id="viewListFilter">
+                                    <option value="all">Todas las Listas</option>
+                                    <option value="1">Tareas del Trabajo</option>
+                                    <option value="2">Compras del Supermercado</option>
+                                    <option value="3">Proyecto Web</option>
+                                    <option value="4">Películas por Ver</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="viewTagsFilter" class="form-label">Etiquetas</label>
+                                <select class="selectpicker form-select" id="viewTagsFilter" multiple data-selected-text-format="count" title="Todas las etiquetas">
+                                    <option value="1" data-content="<span class='badge' style='background-color: #0d6efd;'>Trabajo</span>">Trabajo</option>
+                                    <option value="2" data-content="<span class='badge' style='background-color: #198754;'>Personal</span>">Personal</option>
+                                    <option value="3" data-content="<span class='badge' style='background-color: #ffc107; color: #212529;'>Compras</span>">Compras</option>
+                                    <option value="4" data-content="<span class='badge' style='background-color: #dc3545;'>Urgente</span>">Urgente</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="viewDueDateFilter" class="form-label">Fecha de Vencimiento</label>
+                                <select class="form-select" id="viewDueDateFilter">
+                                    <option value="all">Cualquier fecha</option>
+                                    <option value="today">Hoy</option>
+                                    <option value="tomorrow">Mañana</option>
+                                    <option value="week">Esta semana</option>
+                                    <option value="overdue">Vencidas</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        <h6 class="mb-3">Ordenamiento</h6>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="viewSortBy" class="form-label">Ordenar por</label>
+                                <select class="form-select" id="viewSortBy">
+                                    <option value="dueDate">Fecha de vencimiento</option>
+                                    <option value="name">Nombre</option>
+                                    <option value="list">Lista</option>
+                                    <option value="status">Estado</option>
+                                    <option value="dateCreated">Fecha de creación</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="viewSortDirection" class="form-label">Dirección</label>
+                                <select class="form-select" id="viewSortDirection">
+                                    <option value="asc">Ascendente</option>
+                                    <option value="desc">Descendente</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        <h6 class="mb-3">Visualización</h6>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="viewDisplayMode" class="form-label">Modo de visualización</label>
+                                <select class="form-select" id="viewDisplayMode">
+                                    <option value="list">Lista</option>
+                                    <option value="board">Tablero</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label d-block">Opciones adicionales</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="viewShowCompleted" checked>
+                                    <label class="form-check-label" for="viewShowCompleted">Mostrar completados</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="viewShowOverdue" checked>
+                                    <label class="form-check-label" for="viewShowOverdue">Mostrar vencidos</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveViewBtn">Guardar Vista</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit View Modal -->
+    <div class="modal fade" id="editViewModal" tabindex="-1" aria-labelledby="editViewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editViewModalLabel">Editar Vista Personalizada</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editViewForm" class="needs-validation" novalidate>
+                        <input type="hidden" id="editViewId" value="1">
+                        <div class="mb-3">
+                            <label for="editViewName" class="form-label">Nombre de la Vista</label>
+                            <input type="text" class="form-control" id="editViewName" value="Tareas Pendientes" required>
+                            <div class="invalid-feedback">
+                                Por favor ingresa un nombre para la vista.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editViewDescription" class="form-label">Descripción (opcional)</label>
+                            <textarea class="form-control" id="editViewDescription" rows="2">Muestra todas las tareas que están en estado pendiente de todas tus listas.</textarea>
+                        </div>
+                        
+                        <hr>
+                        <h6 class="mb-3">Criterios de Filtrado</h6>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editViewStatusFilter" class="form-label">Estado</label>
+                                <select class="form-select" id="editViewStatusFilter">
+                                    <option value="">Todos los estados</option>
+                                    <option value="pending" selected>Pendiente</option>
+                                    <option value="completed">Completado</option>
+                                    <option value="inactive">Inactivo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editViewListFilter" class="form-label">Lista</label>
+                                <select class="form-select" id="editViewListFilter">
+                                    <option value="all" selected>Todas las Listas</option>
+                                    <option value="1">Tareas del Trabajo</option>
+                                    <option value="2">Compras del Supermercado</option>
+                                    <option value="3">Proyecto Web</option>
+                                    <option value="4">Películas por Ver</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editViewTagsFilter" class="form-label">Etiquetas</label>
+                                <select class="selectpicker form-select" id="editViewTagsFilter" multiple data-selected-text-format="count" title="Todas las etiquetas">
+                                    <option value="1" data-content="<span class='badge' style='background-color: #0d6efd;'>Trabajo</span>">Trabajo</option>
+                                    <option value="2" data-content="<span class='badge' style='background-color: #198754;'>Personal</span>">Personal</option>
+                                    <option value="3" data-content="<span class='badge' style='background-color: #ffc107; color: #212529;'>Compras</span>">Compras</option>
+                                    <option value="4" data-content="<span class='badge' style='background-color: #dc3545;'>Urgente</span>">Urgente</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editViewDueDateFilter" class="form-label">Fecha de Vencimiento</label>
+                                <select class="form-select" id="editViewDueDateFilter">
+                                    <option value="all" selected>Cualquier fecha</option>
+                                    <option value="today">Hoy</option>
+                                    <option value="tomorrow">Mañana</option>
+                                    <option value="week">Esta semana</option>
+                                    <option value="overdue">Vencidas</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        <h6 class="mb-3">Ordenamiento</h6>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editViewSortBy" class="form-label">Ordenar por</label>
+                                <select class="form-select" id="editViewSortBy">
+                                    <option value="dueDate" selected>Fecha de vencimiento</option>
+                                    <option value="name">Nombre</option>
+                                    <option value="list">Lista</option>
+                                    <option value="status">Estado</option>
+                                    <option value="dateCreated">Fecha de creación</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editViewSortDirection" class="form-label">Dirección</label>
+                                <select class="form-select" id="editViewSortDirection">
+                                    <option value="asc" selected>Ascendente</option>
+                                    <option value="desc">Descendente</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        <h6 class="mb-3">Visualización</h6>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editViewDisplayMode" class="form-label">Modo de visualización</label>
+                                <select class="form-select" id="editViewDisplayMode">
+                                    <option value="list" selected>Lista</option>
+                                    <option value="board">Tablero</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label d-block">Opciones adicionales</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="editViewShowCompleted">
+                                    <label class="form-check-label" for="editViewShowCompleted">Mostrar completados</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="editViewShowOverdue" checked>
+                                    <label class="form-check-label" for="editViewShowOverdue">Mostrar vencidos</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-danger" id="deleteViewBtn">Eliminar Vista</button>
+                    <div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="updateViewBtn">Guardar Cambios</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Select -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom JS -->
+    <script src="js/custom-views.js"></script>
+</body>
+</html> 

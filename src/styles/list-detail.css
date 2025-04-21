@@ -1,0 +1,206 @@
+/* List Detail Styles */
+
+/* Header Section */
+.display-5 {
+    font-weight: 600;
+}
+
+#editTitleBtn {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+h1:hover + #editTitleBtn,
+#editTitleBtn:hover {
+    opacity: 1;
+}
+
+/* Tags */
+.tags .badge {
+    font-size: 0.9rem;
+    padding: 0.5em 1em;
+    margin-right: 0.5rem;
+}
+
+/* Progress Bar */
+.progress {
+    background-color: #e9ecef;
+    border-radius: 0.5rem;
+}
+
+.progress-bar {
+    background-color: #0d6efd;
+    border-radius: 0.5rem;
+    transition: width 0.6s ease;
+}
+
+/* List Items */
+.list-group-item {
+    border-left: none;
+    border-right: none;
+    padding: 1rem;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.list-group-item:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+.list-group-item .form-check {
+    padding-left: 2rem;
+}
+
+.form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: -2rem;
+    cursor: pointer;
+}
+
+.form-check-label {
+    cursor: pointer;
+    transition: text-decoration 0.3s ease;
+}
+
+/* Item Actions */
+.btn-group .btn-link {
+    padding: 0.25rem 0.5rem;
+    color: #6c757d;
+    transition: color 0.2s ease-in-out;
+}
+
+.btn-group .btn-link:hover {
+    color: #0d6efd;
+}
+
+.btn-group .btn-link.text-danger:hover {
+    color: #dc3545 !important;
+}
+
+/* Add Item Form */
+#addItemForm {
+    position: relative;
+}
+
+#newItemInput {
+    padding-right: 3rem;
+}
+
+/* Activity Log */
+.activity-log .list-group-item {
+    padding: 0.75rem 1rem;
+}
+
+.activity-log small {
+    color: #6c757d;
+}
+
+/* Share Modal */
+.modal-content {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-10px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 767.98px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .display-5 {
+        font-size: 2rem;
+    }
+
+    .btn-group {
+        display: flex;
+        width: 100%;
+    }
+
+    .btn-group .btn {
+        flex: 1;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #212529;
+        color: #f8f9fa;
+    }
+
+    .card {
+        background-color: #2c3034;
+        border-color: #373b3e;
+    }
+
+    .list-group-item {
+        background-color: #2c3034;
+        border-color: #373b3e;
+        color: #f8f9fa;
+    }
+
+    .list-group-item:hover {
+        background-color: #343a40;
+    }
+
+    .form-control {
+        background-color: #343a40;
+        border-color: #495057;
+        color: #f8f9fa;
+    }
+
+    .form-control:focus {
+        background-color: #343a40;
+        color: #f8f9fa;
+    }
+
+    .text-muted {
+        color: #adb5bd !important;
+    }
+
+    .modal-content {
+        background-color: #2c3034;
+        border-color: #373b3e;
+    }
+
+    .modal-header {
+        border-bottom-color: #373b3e;
+    }
+} 
