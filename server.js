@@ -6,8 +6,10 @@ const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const seedDatabase = require('./utils/seeder');
 
-// Cargar variables de entorno
-dotenv.config();
+// Cargar variables de entorno SOLO si no estamos en producción
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 
 // Inicializar la aplicación Express
 const app = express();
@@ -21,8 +23,10 @@ app.use(cors());
 // Conectar a MongoDB
 connectDB()
   .then(() => {
-    // Sembrar datos iniciales
-    seedDatabase();
+    // Sembrar datos iniciales solo en desarrollo
+    if (process.env.NODE_ENV !== 'production') {
+      seedDatabase();
+    }
   })
   .catch(err => {
     console.log('Error al conectar a MongoDB. Usando modo sin persistencia.');
