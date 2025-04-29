@@ -111,15 +111,15 @@
                         <h5 class="card-title">Resumen</h5>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Total Usuarios:</span>
-                            <span class="badge bg-primary rounded-pill">24</span>
+                            <span class="badge bg-primary rounded-pill" id="statsTotalUsers">0</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Administradores:</span>
-                            <span class="badge bg-danger rounded-pill">3</span>
+                            <span class="badge bg-danger rounded-pill" id="statsAdminCount">0</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Nuevos Hoy:</span>
-                            <span class="badge bg-success rounded-pill">2</span>
+                            <span class="badge bg-success rounded-pill" id="statsNewToday">0</span>
                         </div>
                     </div>
                 </div>
@@ -426,12 +426,120 @@
         </div>
     </div>
 
-    <!-- Toast Container -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModalAdmin" tabindex="-1" aria-labelledby="editUserModalAdminLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="editUserModalAdminLabel">Editar Usuario</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserFormAdmin" class="needs-validation" novalidate>
+                        <input type="hidden" id="editUserIdAdmin">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control-plaintext" id="editUserUsernameAdmin" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="text" class="form-control-plaintext" id="editUserEmailAdmin" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editUserNameAdmin" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="editUserNameAdmin" required>
+                            <div class="invalid-feedback">
+                                Por favor ingresa el nombre completo.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="editUserBirthDateAdmin" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="editUserBirthDateAdmin">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveUserEditAdminBtn">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View User Modal -->
+    <div class="modal fade" id="viewUserModalAdmin" tabindex="-1" aria-labelledby="viewUserModalAdminLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="viewUserModalAdminLabel">Detalles del Usuario</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-user-circle fa-3x me-3 text-primary"></i>
+                                <div>
+                                    <h5 class="mb-0" id="viewUserName">Nombre Completo</h5>
+                                    <p class="text-muted mb-0" id="viewUserUsername">@username</p>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Email</label>
+                                    <p id="viewUserEmail">email@example.com</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Rol</label>
+                                    <p><span class="badge" id="viewUserRole">Rol</span></p>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Fecha de Registro</label>
+                                    <p id="viewUserRegDate">01/01/2023</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Fecha de Nacimiento</label>
+                                    <p id="viewUserBirthDate">No especificada</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container for notifications -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Notificación</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastMessage">
+                Mensaje de notificación
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
+    <!-- API JS -->
+    <script src="js/api.js"></script>
     <script src="js/admin-users.js"></script>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
 </body>
 </html> 

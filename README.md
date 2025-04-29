@@ -1,80 +1,150 @@
-# Generador-de-listas-etiquetadas
-Proyecto de Desarrollo de aplicaiones y servicios WEB
+# Generador de Listas Etiquetadas
 
-*Objetivo del proyecto*
-    El proyecto consiste en desarrollar una aplicación web, denominada "Generador de listas etiquetadas", que permite a los usuarios crear y gestionar listas de elementos (ítems). Cada ítem dentro de una lista puede ser etiquetado con una o varias etiquetas y tener un estado (activo, inactivo o pendiente). Los usuarios podrán filtrar sus listas para visualizar únicamente los ítems que cumplan con criterios específicos de etiquetas y estados. Adicionalmente, la aplicación permitirá agregar campos espaciales personalizados por lista y generar vistas personalizadas con filtros y ordenamientos para una gestión más eficiente de la información.
-    El objetivo principal es proporcionar una herramienta flexible y personalizable para la organización de información a través de listas, facilitando la categorización y el seguimiento de elementos mediante etiquetas y estados.
+Aplicación web para crear y gestionar listas de elementos con etiquetas y estados personalizados.
 
-*Entidades que se guardaran en la base de datos*
-    * **Usuarios:**
-    * `username` (string): Nombre de usuario único. Ejemplo: `juanp`.
-    * `email` (string): Correo electrónico único. Ejemplo: `juanp@gmail.com`.
-    * `nombre` (string): Nombre completo del usuario. Ejemplo: `Juan Pérez López`.
-    * `password` (string, hash): Contraseña del usuario (almacenada de forma segura con hash).
-    * `fecha_registro` (string, fecha año-mes-día): Fecha en que el usuario se registró.
-    * `fecha_nacimiento` (string, fecha año-mes-día): Fecha de nacimiento del usuario.
-    * `listasFavoritas` (Array de ObjectId, referencia a Listas): Listas marcadas como favoritas por el usuario.
-    * `listasArchivadas` (Array de ObjectId, referencia a Listas): Listas archivadas por el usuario.
-    * `createdAt` (Date): Fecha de creación del usuario.
-    * **Listas:**
-    * `userId` (ObjectId, referencia a Usuario): Identificador del usuario que creó la lista.
-    * `title` (String): Título de la lista. Ejemplo: `Tareas Pendientes`.
-    * `description` (String): Descripción opcional de la lista.
-    * `camposEspaciales` (Objeto):  Campos personalizados definidos para la lista.
-    * `createdAt` (Date): Fecha de creación de la lista.
-    * `updatedAt` (Date): Fecha de última modificación de la lista.
-    * **Ítems:**
-    * `listId` (ObjectId, referencia a Lista): Identificador de la lista a la que pertenece el ítem.
-    * `title` (String): Título del ítem. Ejemplo: `Comprar leche`.
-    * `description` (String): Descripción detallada del ítem.
-    * `estado` (String, enum: ['activo', 'inactivo', 'pendiente']): Estado actual del ítem.
-    * `etiquetas` (Array de Strings):  Lista de etiquetas asignadas al ítem. Ejemplo: `['compras', 'urgente']`.
-    * `imagenUrl` (String): URL de una imagen asociada al ítem (opcional).
-    * `createdAt` (Date): Fecha de creación del ítem.
-    * `updatedAt` (Date): Fecha de última modificación del ítem.
-    * **Etiquetas:**
-    * `nombre` (String, único por usuario): Nombre de la etiqueta. Ejemplo: `trabajo`.
-    * `userId` (ObjectId, referencia a Usuario): Usuario que creó la etiqueta (para etiquetas personalizadas).
-    * **Relaciones Ítem-Etiquetas:**
-    * `itemId` (ObjectId, referencia a Ítem): Identificador del ítem.
-    * `tagId` (ObjectId, referencia a Etiqueta): Identificador de la etiqueta.
-    * **Vistas Personalizadas:**
-    * `userId` (ObjectId, referencia a Usuario): Usuario que guardó la vista personalizada.
-    * `nombre` (String): Nombre de la vista personalizada.
-    * `filtros` (Objeto): Criterios de filtrado guardados (ej., por etiquetas, estados).
-    * `ordenamientos` (Objeto):  Criterios de ordenamiento guardados (ej., por fecha de creación, título).
+## Descripción
 
-*Tipos de usuario que hay en la aplicacion*
-    * **Administrador:**  Usuario con permisos para gestionar todos los aspectos de la aplicación, incluyendo la gestión de usuarios, la configuración general y la supervisión del sistema.
-    * **Usuario Común (Cliente/Profesor/Estudiante):** Usuario regular que puede crear y gestionar sus propias listas, ítems y etiquetas.  En un contexto educativo, podrían diferenciarse roles como Profesor y Estudiante con permisos específicos, aunque inicialmente se considera un usuario común genérico.
+El proyecto "Generador de listas etiquetadas" permite a los usuarios crear y gestionar listas de elementos (ítems). Cada ítem dentro de una lista puede ser etiquetado con una o varias etiquetas y tener un estado (activo, inactivo o pendiente). Los usuarios pueden filtrar sus listas para visualizar únicamente los ítems que cumplan con criterios específicos de etiquetas y estados.
 
-*Personas encargadas de cada actividad*
-    * *Alumno 1 (Federico Humberto Zaragoza Manuel):*  Responsable del módulo de **Administración de Usuarios** y la implementación de las funcionalidades de **Usuarios y Ventas** (en un contexto extendido).  También del diseño e implementación del menú de navegación y la página principal.
-    * 
-    * *Alumno 2 (Luis Eduardo González Gloria):*  Responsable del módulo de **Administración de Productos** (en un contexto extendido) y la implementación del **Registro y Detalle de Usuarios**.
-    * 
-    * *Alumno 3 (Diego Mercado Coello):* Responsable del módulo de **Cliente/Usuario Común**, incluyendo el **Carrito de Compra**, **Historial de Compras**, y la gestión de imágenes en la base de datos. También de la **Consulta de Productos en Venta** y el **Detalle de Productos en Venta**, así como el **Carrito de Compra** y el **Historial de Compras**.
+## Características
 
-*Flujo de la informacion*
-    El flujo de información desde la perspectiva de cada tipo de usuario (producto mínimo viable) se describe a continuación:
-        **Usuario Común:**
-        1. **Login:** El usuario introduce sus credenciales para acceder a la aplicación.
-        2. **Visualización de Listas:** Tras el login, el usuario visualiza un listado de sus listas creadas.
-        3. **Creación de Lista:** El usuario puede crear nuevas listas, definiendo título y descripción.
-        4. **Visualización de Ítems en Lista:** Al seleccionar una lista, el usuario accede a la vista detallada de la lista, que muestra los ítems asociados.
-        5. **Creación de Ítem:** Dentro de una lista, el usuario puede crear nuevos ítems, asignándoles título, descripción, estado y etiquetas.
-        6. **Edición y Eliminación de Ítems:** El usuario puede modificar o eliminar ítems existentes en una lista.
-        7. **Filtrado y Ordenamiento de Ítems:** El usuario puede aplicar filtros por etiquetas y estados, y ordenar los ítems dentro de la lista.
-        8. **Logout:** El usuario puede cerrar sesión en la aplicación.
-    **Administrador:**
-        1. **Login:** El administrador introduce sus credenciales de administrador.
-        2. **Acceso a Gestión de Usuarios:** El administrador puede acceder a una sección para gestionar usuarios (consultar, eliminar, modificar roles).
-        3. **Acceso a Gestión de Productos (Contexto Extendido):** El administrador puede gestionar el catálogo de productos.
-        4. **Acceso a Ventas (Contexto Extendido):** El administrador puede consultar informes de ventas.
-        5. **Funcionalidades de Usuario Común:** El administrador también tiene acceso a todas las funcionalidades de un usuario común para gestionar listas e ítems.
+- **Autenticación y Autorización:**
+  - Registro e inicio de sesión de usuarios
+  - Autenticación mediante JWT
+  - Roles de usuario (administrador y usuario común)
+  - Gestión de perfiles y contraseñas
 
-*Tecnologias a utilizar*
-    * **Front-end:** HTML, CSS (Bootstrap para estilos responsivos), JavaScript.
-    * **Back-end:** Node.js con Express.
-    * **Base de Datos:** MongoDB.
-    * **Autenticación:** JWT (JSON Web Tokens).
+- **Gestión de Listas:**
+  - Crear, ver, editar y eliminar listas
+  - Marcar listas como favoritas o archivarlas
+  - Campos personalizados para cada lista
+  - Filtrado y búsqueda de listas
+
+- **Gestión de Ítems:**
+  - Crear, ver, editar y eliminar ítems dentro de listas
+  - Asignar etiquetas y estados a los ítems
+  - Filtrar ítems por etiquetas o estado
+  - Subir imágenes para los ítems
+
+- **Sistema de Etiquetas:**
+  - Gestión centralizada de etiquetas
+  - Personalización de colores para etiquetas
+  - Estadísticas de uso de etiquetas
+  - Etiquetas globales y personales
+
+- **Vistas Personalizadas:**
+  - Guardar filtros y ordenamientos favoritos
+  - Aplicar vistas personalizadas a las listas
+  - Vista previa en tiempo real de filtros
+
+- **Panel de Administración:**
+  - Gestión de usuarios (solo administradores)
+  - Ver, eliminar usuarios y cambiar roles
+
+## Tecnologías utilizadas
+
+- **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 5
+- **Backend:** Node.js, Express
+- **Base de datos:** MongoDB
+- **Autenticación:** JWT (JSON Web Tokens)
+- **Seguridad:** Bcrypt para hasheo de contraseñas
+
+## Instalación
+
+1. Clona este repositorio:
+   ```
+   git clone https://github.com/tu-usuario/generador-de-listas-etiquetadas.git
+   cd generador-de-listas-etiquetadas
+   ```
+
+2. Instala las dependencias:
+   ```
+   npm install
+   ```
+
+3. Configura las variables de entorno:
+   Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+   ```
+   MONGODB_URI=mongodb://localhost:27017/generador_listas
+   JWT_SECRET=tu_clave_secreta
+   JWT_EXPIRE=7d
+   PORT=3000
+   ```
+
+4. Inicia el servidor:
+   ```
+   npm start
+   ```
+   
+   O para desarrollo con recarga automática:
+   ```
+   npm run dev
+   ```
+
+5. Abre en tu navegador:
+   ```
+   http://localhost:3000
+   ```
+
+## Uso
+
+### Credenciales predeterminadas
+
+Al iniciar la aplicación por primera vez, se crean automáticamente los siguientes usuarios:
+
+- **Usuario administrador:**
+  - Email: admin@example.com
+  - Contraseña: admin123
+
+- **Usuario regular:**
+  - Email: user@example.com
+  - Contraseña: user123
+
+### Flujo básico
+
+1. Inicia sesión o regístrate como nuevo usuario
+2. En el dashboard, crea una nueva lista con el botón "Nueva Lista"
+3. Accede a una lista para ver su detalle
+4. Agrega nuevos ítems a la lista
+5. Asigna etiquetas y estados a los ítems
+6. Filtra ítems por etiquetas o estado
+7. Guarda tus filtros como vistas personalizadas
+8. Marca listas como favoritas o archívalas
+
+## Estructura del proyecto
+
+```
+generador-de-listas-etiquetadas/
+├── config/               # Configuración (base de datos)
+├── middleware/           # Middlewares (autenticación)
+├── models/               # Modelos de MongoDB
+├── routes/               # Rutas de la API
+├── src/                  # Frontend
+│   ├── components/       # Componentes reutilizables
+│   ├── js/               # Archivos JavaScript
+│   ├── css/              # Hojas de estilo CSS
+│   └── *.html            # Páginas HTML
+├── utils/                # Utilidades (JWT, sembrado de datos)
+├── .env                  # Variables de entorno
+├── server.js             # Servidor Express
+├── package.json          # Dependencias del proyecto
+└── README.md             # Documentación
+```
+
+## Modos de funcionamiento
+
+La aplicación puede funcionar en dos modos:
+
+1. **Modo completo con MongoDB:** Utiliza MongoDB para persistencia de datos. Recomendado para producción.
+
+2. **Modo simulado:** Si no se puede conectar a MongoDB, la aplicación funciona en modo simulado con datos en memoria. Útil para pruebas o desarrollo sin MongoDB.
+
+## Equipo de desarrollo
+
+- Federico Humberto Zaragoza Manuel
+- Luis Eduardo González Gloria
+- Diego Mercado Coello
+
+## Licencia
+
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.

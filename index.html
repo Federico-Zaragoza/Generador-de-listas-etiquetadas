@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Notificaciones</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <h1>Sistema de Notificaciones</h1>
+            </div>
+            <div class="header-actions">
+                <div class="notification-container">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">0</span>
+                    </button>
+                    <div class="notification-menu">
+                        <div class="notification-header">
+                            <h3>Notificaciones</h3>
+                            <div class="notification-actions">
+                                <button class="mark-all-read">Marcar todo como leído</button>
+                                <button class="clear-all">Limpiar todo</button>
+                            </div>
+                        </div>
+                        <div class="notification-list">
+                            <!-- Las notificaciones se insertarán aquí dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>Demostración del Sistema de Notificaciones</h2>
+            <p>Haz clic en los botones para generar diferentes tipos de notificaciones:</p>
+            
+            <div class="demo-buttons">
+                <button class="demo-button btn-info" data-type="info">
+                    <i class="fas fa-info-circle"></i> Información
+                </button>
+                <button class="demo-button btn-success" data-type="success">
+                    <i class="fas fa-check-circle"></i> Éxito
+                </button>
+                <button class="demo-button btn-warning" data-type="warning">
+                    <i class="fas fa-exclamation-triangle"></i> Advertencia
+                </button>
+                <button class="demo-button btn-danger" data-type="danger">
+                    <i class="fas fa-times-circle"></i> Error
+                </button>
+            </div>
+
+            <div class="demo-section">
+                <h3>Características:</h3>
+                <ul>
+                    <li>Notificaciones en tiempo real con animaciones</li>
+                    <li>Contador de notificaciones no leídas</li>
+                    <li>Diferentes tipos de notificaciones (info, éxito, advertencia, error)</li>
+                    <li>Notificaciones toast que aparecen y desaparecen automáticamente</li>
+                    <li>Marca notificaciones como leídas/no leídas</li>
+                    <li>Elimina notificaciones individuales o todas juntas</li>
+                    <li>Diseño responsive para móviles y escritorio</li>
+                </ul>
+            </div>
+
+            <div class="demo-section">
+                <h3>Cómo implementar:</h3>
+                <pre><code>
+// 1. Incluir CSS y JS en tu HTML
+&lt;link rel="stylesheet" href="src/css/style.css"&gt;
+&lt;script src="src/js/notifications.js"&gt;&lt;/script&gt;
+
+// 2. Agregar HTML básico
+&lt;div class="notification-container"&gt;
+    &lt;button class="notification-btn"&gt;
+        &lt;i class="fas fa-bell"&gt;&lt;/i&gt;
+        &lt;span class="notification-badge"&gt;0&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;div class="notification-menu"&gt;
+        &lt;div class="notification-header"&gt;
+            &lt;h3&gt;Notificaciones&lt;/h3&gt;
+            &lt;div class="notification-actions"&gt;
+                &lt;button class="mark-all-read"&gt;Marcar todo como leído&lt;/button&gt;
+                &lt;button class="clear-all"&gt;Limpiar todo&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="notification-list"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+// 3. Crear notificaciones en tu código
+window.notificationSystem.addNotification({
+    type: 'success',  // 'info', 'success', 'warning', 'danger'
+    title: 'Operación completada',
+    message: 'La tarea se ha completado exitosamente.',
+    time: new Date(),
+    unread: true,
+    link: '/optional-link.html'  // opcional
+});
+                </code></pre>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Sistema de Notificaciones. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="src/js/notifications.js"></script>
+</body>
+</html> 
