@@ -9,7 +9,8 @@ const { protect } = require('../middleware/auth');
 // @access  Public
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password, nombre, fecha_nacimiento } = req.body;
+    // Map front-end field names to model fields
+    const { username, email, password, fullName: nombre, birthDate: fecha_nacimiento } = req.body;
 
     // Verificar si el usuario ya existe
     const userExists = await User.findOne({ 
