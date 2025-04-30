@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('register.js cargado');
     // Get form elements
     const registerForm = document.getElementById('registerForm');
     const passwordInput = document.getElementById('password');
@@ -37,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     confirmPasswordInput.addEventListener('input', validatePasswordMatch);
 
     // Form validation and submission
-    registerForm.addEventListener('submit', function(event) {
+    registerForm.addEventListener('submit', async function(event) {
         event.preventDefault();
         
         // Validate password match
@@ -60,11 +61,27 @@ document.addEventListener('DOMContentLoaded', function() {
             termsAccepted: termsCheck.checked
         };
 
-        // Here you would typically make an API call to your backend
-        console.log('Form submitted with data:', formData);
-        
-        // Simulate API call
-        simulateRegistration(formData);
+        console.log('Register form submit event fired');
+        console.log('Datos registro recolectados:', {
+            username: formData.username,
+            email: formData.email,
+            fullName: formData.fullName,
+            birthDate: formData.birthDate,
+            termsAccepted: formData.termsAccepted
+        });
+        console.log('Llamando a window.api.register...');
+        try {
+            const response = await window.api.register(formData);
+            console.log('API register response:', response);
+            if (response.success) {
+                showSuccessMessage();
+                setTimeout(() => window.location.href = 'index.html', 2000);
+            } else {
+                console.error('Registration failed:', response.message);
+            }
+        } catch (error) {
+            console.error('Error en window.api.register:', error);
+        }
     });
 
     // Helper function to shake invalid fields
@@ -74,28 +91,6 @@ document.addEventListener('DOMContentLoaded', function() {
             input.classList.add('shake');
             setTimeout(() => input.classList.remove('shake'), 500);
         });
-    }
-
-    // Simulate registration API call
-    function simulateRegistration(formData) {
-        // Show loading state
-        const submitBtn = registerForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creando cuenta...';
-        submitBtn.disabled = true;
-
-        // Simulate API delay
-        setTimeout(() => {
-            // Reset button state
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-
-            // Show success message and redirect
-            showSuccessMessage();
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 2000);
-        }, 2000);
     }
 
     // Function to show success message
