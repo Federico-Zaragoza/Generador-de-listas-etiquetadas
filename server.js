@@ -23,10 +23,8 @@ app.use(cors());
 // Conectar a MongoDB
 connectDB()
   .then(() => {
-    // Sembrar datos iniciales solo en desarrollo
-    if (process.env.NODE_ENV !== 'production') {
-      seedDatabase();
-    }
+    // Sembrar datos iniciales (sin condición)
+    seedDatabase();
   })
   .catch(err => {
     console.log('Error al conectar a MongoDB. Usando modo sin persistencia.');
