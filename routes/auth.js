@@ -12,7 +12,37 @@ router.post('/register', async (req, res) => {
     // Map front-end field names to model fields
     const { username, email, password, fullName: nombre, birthDate: fecha_nacimiento } = req.body;
     // Log data received (without full password)
-    console.log('Register attempt:', { username, email, password_length: password?.length, nombre, fecha_nacimiento });
+    console.log('Register attempt:', { 
+      username, 
+      email, 
+      password_length: password?.length, 
+      nombre, 
+      fecha_nacimiento,
+      fecha_nacimiento_type: fecha_nacimiento ? typeof fecha_nacimiento : 'undefined'
+    });
+
+    // Validaciones explícitas
+    if (!username || !email || !password || !nombre) {
+      console.log('Missing required fields:', { 
+        username: !!username, 
+        email: !!email, 
+        password: !!password, 
+        nombre: !!nombre 
+      });
+      return res.status(400).json({
+        success: false,
+        message: 'Todos los campos requeridos deben ser proporcionados'
+      });
+    }
+
+    // Validar longitud de contraseña
+    if (password.length < 6) {
+      console.log('Password too short');
+      return res.status(400).json({
+        success: false,
+        message: 'La contraseña debe tener al menos 6 caracteres'
+      });
+    }
 
     console.log('Checking if user exists...');
     // Verificar si el usuario ya existe
@@ -28,17 +58,52 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    console.log('Attempting to create user in DB...');
-    // Crear el usuario
-    const user = await User.create({
+    // Preparar el objeto para crear el usuario
+    const userData = {
       username,
       email,
       password,
       nombre,
-      fecha_nacimiento,
       fecha_registro: Date.now()
+    };
+    
+    // Añadir fecha_nacimiento solo si es válida
+    if (fecha_nacimiento) {
+      try {
+        const fecha = new Date(fecha_nacimiento);
+        if (!isNaN(fecha.getTime())) { // Verificar que sea una fecha válida
+          userData.fecha_nacimiento = fecha;
+        } else {
+          console.log('Invalid birth date format, ignoring');
+        }
+      } catch (error) {
+        console.log('Error processing birth date, ignoring:', error.message);
+      }
+    }
+
+    console.log('Attempting to create user in DB with data:', {
+      ...userData,
+      password: '[REDACTED]'
     });
-    console.log('User created in DB:', user);
+    
+    // Crear el usuario
+    const user = await User.create(userData);
+    
+    if (!user) {
+      console.log('User.create returned null/undefined');
+      return res.status(500).json({
+        success: false,
+        message: 'Error al crear el usuario en la base de datos'
+      });
+    }
+    
+    console.log('User created in DB:', {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      nombre: user.nombre,
+      role: user.role
+    });
 
     console.log('Generating token...');
     // Generar token
@@ -59,6 +124,28 @@ router.post('/register', async (req, res) => {
     });
   } catch (error) {
     console.error('FATAL ERROR during registration:', error);
+    
+    // Mensajes específicos según el tipo de error
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(e => e.message);
+      console.error('Validation error details:', messages);
+      return res.status(400).json({
+        success: false,
+        message: messages[0] || 'Error de validación',
+        errors: messages
+      });
+    }
+    
+    // Error de clave duplicada (mongoose)
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue)[0];
+      console.error('Duplicate key error:', field);
+      return res.status(400).json({
+        success: false,
+        message: `El campo ${field} ya está en uso`
+      });
+    }
+    
     res.status(500).json({
       success: false,
       message: 'Error al registrar usuario',
