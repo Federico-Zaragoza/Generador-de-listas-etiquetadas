@@ -11,11 +11,15 @@ router.post('/register', async (req, res) => {
   try {
     // Map front-end field names to model fields
     const { username, email, password, fullName: nombre, birthDate: fecha_nacimiento } = req.body;
+    // Log data received (without full password)
+    console.log('Register attempt:', { username, email, password_length: password?.length, nombre, fecha_nacimiento });
 
+    console.log('Checking if user exists...');
     // Verificar si el usuario ya existe
     const userExists = await User.findOne({ 
       $or: [{ email }, { username }] 
     });
+    console.log('User exists check result:', userExists);
 
     if (userExists) {
       return res.status(400).json({
@@ -24,6 +28,7 @@ router.post('/register', async (req, res) => {
       });
     }
 
+    console.log('Attempting to create user in DB...');
     // Crear el usuario
     const user = await User.create({
       username,
@@ -33,10 +38,13 @@ router.post('/register', async (req, res) => {
       fecha_nacimiento,
       fecha_registro: Date.now()
     });
+    console.log('User created in DB:', user);
 
+    console.log('Generating token...');
     // Generar token
     const token = generateToken(user._id);
 
+    console.log('Sending success response to client...');
     res.status(201).json({
       success: true,
       message: 'Usuario registrado correctamente',
@@ -50,7 +58,7 @@ router.post('/register', async (req, res) => {
       token
     });
   } catch (error) {
-    console.error('Error en registro:', error);
+    console.error('FATAL ERROR during registration:', error);
     res.status(500).json({
       success: false,
       message: 'Error al registrar usuario',
