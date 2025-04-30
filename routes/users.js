@@ -388,4 +388,54 @@ router.put('/:id', protect, authorize('admin'), async (req, res) => {
   }
 });
 
+// @desc    Crear nuevo usuario (admin)
+// @route   POST /api/users
+// @access  Private/Admin
+router.post('/', protect, authorize('admin'), async (req, res) => {
+  try {
+    const { username, email, nombre, password, role, fecha_nacimiento } = req.body;
+    // Validar campos requeridos
+    if (!username || !email || !nombre || !password || !role) {
+      return res.status(400).json({ success: false, message: 'Todos los campos requeridos deben proporcionarse' });
+    }
+    // Verificar si ya existe usuario
+    const exists = await User.findOne({ $or: [{ email }, { username }] });
+    if (exists) {
+      return res.status(400).json({ success: false, message: 'El email o nombre de usuario ya existe' });
+    }
+    // Preparar datos de usuario
+    const userData = { username, email, nombre, password, role, fecha_registro: Date.now() };
+    if (fecha_nacimiento) {
+      const date = new Date(fecha_nacimiento);
+      if (!isNaN(date.getTime())) userData.fecha_nacimiento = date;
+    }
+    // Crear el usuario
+    const user = await User.create(userData);
+    res.status(201).json({
+      success: true,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        nombre: user.nombre,
+        role: user.role,
+        fecha_registro: user.fecha_registro
+      }
+    });
+  } catch (error) {
+    console.error('Error al crear usuario por admin:', error);
+    // Errores de validación de Mongoose
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(e => e.message);
+      return res.status(400).json({ success: false, message: messages[0] });
+    }
+    // Error de clave duplicada
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue)[0];
+      return res.status(400).json({ success: false, message: 'El campo ' + field + ' ya está en uso' });
+    }
+    res.status(500).json({ success: false, message: 'Error al crear usuario', error: error.message });
+  }
+});
+
 module.exports = router; 

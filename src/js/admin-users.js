@@ -145,7 +145,7 @@ function deleteUser(userId) {
 }
 
 // Handle new user form submission
-function handleNewUserSubmit() {
+async function handleNewUserSubmit() {
     const form = document.getElementById('newUserForm');
     
     // Form validation
@@ -157,22 +157,33 @@ function handleNewUserSubmit() {
     // Get form values
     const username = document.getElementById('newUsername').value;
     const email = document.getElementById('newEmail').value;
-    const fullName = document.getElementById('newFullName').value;
+    const nombre = document.getElementById('newFullName').value;
     const password = document.getElementById('newPassword').value;
     const role = document.getElementById('newRole').value;
     
-    // In a real app, this would call an API to create the user
-    // For this prototype, we'll just show a toast and close the modal
-    
-    showToast(`Usuario ${fullName} creado con éxito.`, 'success');
-    
-    // Close the modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('newUserModal'));
-    modal.hide();
-    
-    // Reset the form
-    form.reset();
-    form.classList.remove('was-validated');
+    // Prepare user data for API
+    const userData = { username, email, nombre, password, role };
+    console.log('Admin creating user with data:', userData);
+    try {
+        const response = await window.api.createUser(userData);
+        console.log('API createUser response:', response);
+        if (response.success) {
+            showToast(`Usuario ${userData.nombre} creado con éxito.`, 'success');
+            // Close the modal and reset form
+            const modal = bootstrap.Modal.getInstance(document.getElementById('newUserModal'));
+            modal.hide();
+            form.reset();
+            form.classList.remove('was-validated');
+            // Refresh users table and stats
+            await loadUsers();
+            await loadStats();
+        } else {
+            showToast(`Error al crear usuario: ${response.message}`, 'danger');
+        }
+    } catch (error) {
+        console.error('Error en API createUser:', error);
+        showToast('Error de red al crear usuario', 'danger');
+    }
 }
 
 // Handle search

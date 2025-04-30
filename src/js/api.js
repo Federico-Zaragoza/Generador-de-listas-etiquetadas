@@ -274,6 +274,14 @@ const api = {
         });
     },
 
+    // Método para crear usuario (admin)
+    createUser: async (userData) => {
+        return apiRequest('/users', {
+            method: 'POST',
+            body: JSON.stringify(userData)
+        });
+    },
+
     // Add more API methods as needed
 }; 
 
