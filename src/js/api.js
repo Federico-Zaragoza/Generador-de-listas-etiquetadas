@@ -1,5 +1,5 @@
 // API configuration for all frontend requests
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = '/api';
 
 // Utility function for making API requests
 async function apiRequest(endpoint, options = {}) {
