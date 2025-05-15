@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Curvas de Inteligencia Fluida e Inteligencia Cristalizada</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .control-panel {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    .point {
+      cursor: move;
+    }
+    button {
+      margin: 5px;
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    select {
+      margin: 5px;
+      padding: 5px;
+    }
+    .axis-label {
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .legend {
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Curvas de Inteligencia Fluida e Inteligencia Cristalizada</h2>
+  
+  <div class="control-panel">
+    <button id="add-fluid">Añadir punto (Fluida)</button>
+    <button id="add-crystal">Añadir punto (Cristalizada)</button>
+    <button id="remove-selected">Eliminar punto seleccionado</button>
+    <button id="reset">Reiniciar</button>
+    <select id="curve-type">
+      <option value="cardinal">Curva Cardinal</option>
+      <option value="basis">Curva Basis</option>
+      <option value="natural" selected>Curva Natural</option>
+      <option value="monotone">Curva Monotone</option>
+    </select>
+    <button id="hide-points">Mostrar/Ocultar Puntos</button>
+    <button id="select-fluid-curve">Seleccionar Curva Fluida</button>
+    <button id="select-crystal-curve">Seleccionar Curva Cristalizada</button>
+    <button id="move-curve-up">Mover Curva Arriba</button>
+    <button id="move-curve-down">Mover Curva Abajo</button>
+  </div>
+  
+  <div id="chart"></div>
+
+  <script>
+    // Configuración
+    const width = 800;
+    const height = 500;
+    const margin = { top: 40, right: 40, bottom: 60, left: 60 };
+    
+    // Puntos iniciales para la inteligencia fluida (aumenta rápido, luego disminuye)
+    const fluidInitialPoints = [
+      { x: 5, y: 30 },
+      { x: 20, y: 80 },
+      { x: 35, y: 65 },
+      { x: 50, y: 50 },
+      { x: 70, y: 35 }
+    ];
+    
+    // Puntos iniciales para la inteligencia cristalizada (aumenta y se estabiliza)
+    const crystalInitialPoints = [
+      { x: 5, y: 20 },
+      { x: 30, y: 60 },
+      { x: 50, y: 70 },
+      { x: 70, y: 75 }
+    ];
+    
+    // Estado de la aplicación
+    const state = {
+      fluidPoints: [...fluidInitialPoints],
+      crystalPoints: [...crystalInitialPoints],
+      selectedPoint: null,
+      selectedCurve: null, // 'fluid' o 'crystal' cuando una curva completa está seleccionada
+      curveType: 'natural',
+      showPoints: true
+    };
+    
+    // Crear el SVG
+    const svg = d3.select("#chart")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+    
+    // Escalas
+    const xScale = d3.scaleLinear()
+      .domain([0, 80])
+      .range([margin.left, width - margin.right]);
+    
+    const yScale = d3.scaleLinear()
+      .domain([0, 100])
+      .range([height - margin.bottom, margin.top]);
+    
+    // Ejes
+    const xAxis = d3.axisBottom(xScale);
+    const yAxis = d3.axisLeft(yScale);
+    
+    // Añadir ejes al SVG
+    svg.append("g")
+      .attr("transform", `translate(0, ${height - margin.bottom})`)
+      .call(xAxis);
+    
+    svg.append("g")
+      .attr("transform", `translate(${margin.left}, 0)`)
+      .call(yAxis);
+    
+    // Etiquetas de los ejes
+    svg.append("text")
+      .attr("class", "axis-label")
+      .attr("text-anchor", "middle")
+      .attr("x", width / 2)
+      .attr("y", height - 15)
+      .text("Edad");
+    
+    svg.append("text")
+      .attr("class", "axis-label")
+      .attr("text-anchor", "middle")
+      .attr("transform", `translate(${margin.left / 3}, ${height / 2}) rotate(-90)`)
+      .text("Nivel de inteligencia");
+    
+    // Grupos para las curvas y puntos
+    const fluidGroup = svg.append("g").attr("class", "fluid-group");
+    const crystalGroup = svg.append("g").attr("class", "crystal-group");
+    
+    // Función para crear líneas
+    function createLine(curveType) {
+      return d3.line()
+        .x(d => xScale(d.x))
+        .y(d => yScale(d.y))
+        .curve(getCurveFunction(curveType));
+    }
+    
+    function getCurveFunction(type) {
+      switch(type) {
+        case 'cardinal': return d3.curveCardinal;
+        case 'basis': return d3.curveBasis;
+        case 'natural': return d3.curveNatural;
+        case 'monotone': return d3.curveMonotoneX;
+        default: return d3.curveNatural;
+      }
+    }
+    
+    // Renderizar las curvas
+    function renderCurves() {
+      // Ordenar puntos por x antes de dibujar
+      state.fluidPoints.sort((a, b) => a.x - b.x);
+      state.crystalPoints.sort((a, b) => a.x - b.x);
+      
+      const line = createLine(state.curveType);
+      
+      // Dibujar curva fluida
+      fluidGroup.selectAll("path.line").remove();
+      fluidGroup.append("path")
+        .datum(state.fluidPoints)
+        .attr("class", "line")
+        .attr("fill", "none")
+        .attr("stroke", "#3498db")
+        .attr("stroke-width", state.selectedCurve === 'fluid' ? 4 : 2)
+        .attr("stroke-dasharray", state.selectedCurve === 'fluid' ? "none" : "none")
+        .attr("d", line)
+        .style("cursor", "pointer")
+        .on("click", function(event) {
+          event.stopPropagation();
+          selectCurve('fluid');
+        });
+      
+      // Dibujar curva cristalizada
+      crystalGroup.selectAll("path.line").remove();
+      crystalGroup.append("path")
+        .datum(state.crystalPoints)
+        .attr("class", "line")
+        .attr("fill", "none")
+        .attr("stroke", "#e74c3c")
+        .attr("stroke-width", state.selectedCurve === 'crystal' ? 4 : 2)
+        .attr("stroke-dasharray", state.selectedCurve === 'crystal' ? "none" : "none")
+        .attr("d", line)
+        .style("cursor", "pointer")
+        .on("click", function(event) {
+          event.stopPropagation();
+          selectCurve('crystal');
+        });
+    }
+    
+    // Función para renderizar los puntos
+    function renderPoints() {
+      if (!state.showPoints) {
+        fluidGroup.selectAll("circle").remove();
+        crystalGroup.selectAll("circle").remove();
+        return;
+      }
+      
+      // Puntos de la inteligencia fluida
+      const fluidPoints = fluidGroup.selectAll("circle")
+        .data(state.fluidPoints);
+      
+      fluidPoints.enter()
+        .append("circle")
+        .merge(fluidPoints)
+        .attr("class", "point")
+        .attr("cx", d => xScale(d.x))
+        .attr("cy", d => yScale(d.y))
+        .attr("r", 5)
+        .attr("fill", "#3498db")
+        .attr("stroke", "#2980b9")
+        .attr("stroke-width", 1)
+        .call(setupDrag(state.fluidPoints))
+        .on("click", function(event, d) {
+          event.stopPropagation();
+          state.selectedPoint = { type: 'fluid', point: d };
+          updateSelection();
+        });
+      
+      fluidPoints.exit().remove();
+      
+      // Puntos de la inteligencia cristalizada
+      const crystalPoints = crystalGroup.selectAll("circle")
+        .data(state.crystalPoints);
+      
+      crystalPoints.enter()
+        .append("circle")
+        .merge(crystalPoints)
+        .attr("class", "point")
+        .attr("cx", d => xScale(d.x))
+        .attr("cy", d => yScale(d.y))
+        .attr("r", 5)
+        .attr("fill", "#e74c3c")
+        .attr("stroke", "#c0392b")
+        .attr("stroke-width", 1)
+        .call(setupDrag(state.crystalPoints))
+        .on("click", function(event, d) {
+          event.stopPropagation();
+          state.selectedPoint = { type: 'crystal', point: d };
+          updateSelection();
+        });
+      
+      crystalPoints.exit().remove();
+    }
+    
+    // Actualizar la visualización de la selección
+    function updateSelection() {
+      // Resetear estilos de todos los puntos
+      svg.selectAll("circle")
+        .attr("stroke-width", 1)
+        .attr("r", 5);
+      
+      // Si hay un punto seleccionado, destacarlo
+      if (state.selectedPoint) {
+        const selection = state.selectedPoint.type === 'fluid' 
+          ? fluidGroup.selectAll("circle").filter(d => d === state.selectedPoint.point)
+          : crystalGroup.selectAll("circle").filter(d => d === state.selectedPoint.point);
+        
+        selection
+          .attr("stroke-width", 3)
+          .attr("r", 7);
+      }
+      
+      // Si hay una curva seleccionada, destacar todos sus puntos
+      if (state.selectedCurve) {
+        const group = state.selectedCurve === 'fluid' ? fluidGroup : crystalGroup;
+        
+        // Destacar ligeramente todos los puntos de la curva seleccionada
+        group.selectAll("circle")
+          .attr("stroke-width", 2)
+          .attr("r", 6);
+      }
+      
+      // Re-renderizar las curvas para mostrar la selección
+      renderCurves();
+    }
+    
+    // Función para seleccionar una curva completa
+    function selectCurve(curveType) {
+      if (state.selectedPoint) {
+        state.selectedPoint = null;
+      }
+      
+      if (state.selectedCurve === curveType) {
+        state.selectedCurve = null;
+      } else {
+        state.selectedCurve = curveType;
+      }
+      
+      updateSelection();
+    }
+    
+    // Función para mover toda la curva seleccionada
+    function moveCurve(deltaY) {
+      if (!state.selectedCurve) return;
+      
+      const points = state.selectedCurve === 'fluid' ? state.fluidPoints : state.crystalPoints;
+      
+      // Mover todos los puntos de la curva seleccionada
+      points.forEach(point => {
+        point.y = Math.max(0, Math.min(100, point.y + deltaY));
+      });
+      
+      renderPoints();
+      renderCurves();
+    }
+    
+    // Configuración de arrastre
+    function setupDrag(pointsArray) {
+      return d3.drag()
+        .on("start", function() {
+          d3.select(this).raise().attr("stroke-width", 3);
+        })
+        .on("drag", function(event, d) {
+          const x = Math.max(0, Math.min(80, xScale.invert(event.x)));
+          const y = Math.max(0, Math.min(100, yScale.invert(event.y)));
+          d.x = x;
+          d.y = y;
+          d3.select(this)
+            .attr("cx", xScale(x))
+            .attr("cy", yScale(y));
+          renderCurves();
+        })
+        .on("end", function() {
+          d3.select(this).attr("stroke-width", 1);
+        });
+    }
+    
+    // Añadir leyenda
+    const legend = svg.append("g")
+      .attr("class", "legend")
+      .attr("transform", `translate(${width - margin.right - 150}, ${margin.top})`);
+    
+    legend.append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", 150)
+      .attr("height", 60)
+      .attr("fill", "white")
+      .attr("stroke", "#ddd");
+    
+    legend.append("circle")
+      .attr("cx", 15)
+      .attr("cy", 15)
+      .attr("r", 5)
+      .attr("fill", "#3498db");
+    
+    legend.append("text")
+      .attr("x", 30)
+      .attr("y", 20)
+      .text("Inteligencia fluida");
+    
+    legend.append("circle")
+      .attr("cx", 15)
+      .attr("cy", 40)
+      .attr("r", 5)
+      .attr("fill", "#e74c3c");
+    
+    legend.append("text")
+      .attr("x", 30)
+      .attr("y", 45)
+      .text("Inteligencia cristalizada");
+    
+    // Manejadores de eventos
+    d3.select("#add-fluid").on("click", function() {
+      const newX = state.fluidPoints.length > 0 
+        ? (state.fluidPoints[state.fluidPoints.length - 1].x + 5) 
+        : 10;
+      const newPoint = { x: Math.min(newX, 80), y: 50 };
+      state.fluidPoints.push(newPoint);
+      renderPoints();
+      renderCurves();
+    });
+    
+    d3.select("#add-crystal").on("click", function() {
+      const newX = state.crystalPoints.length > 0 
+        ? (state.crystalPoints[state.crystalPoints.length - 1].x + 5) 
+        : 10;
+      const newPoint = { x: Math.min(newX, 80), y: 50 };
+      state.crystalPoints.push(newPoint);
+      renderPoints();
+      renderCurves();
+    });
+    
+    d3.select("#remove-selected").on("click", function() {
+      if (state.selectedPoint) {
+        const points = state.selectedPoint.type === 'fluid' ? state.fluidPoints : state.crystalPoints;
+        const index = points.indexOf(state.selectedPoint.point);
+        if (index !== -1) {
+          points.splice(index, 1);
+          state.selectedPoint = null;
+          renderPoints();
+          renderCurves();
+        }
+      }
+    });
+    
+    d3.select("#reset").on("click", function() {
+      state.fluidPoints = [...fluidInitialPoints];
+      state.crystalPoints = [...crystalInitialPoints];
+      state.selectedPoint = null;
+      renderPoints();
+      renderCurves();
+    });
+    
+    d3.select("#curve-type").on("change", function() {
+      state.curveType = this.value;
+      renderCurves();
+    });
+    
+    d3.select("#hide-points").on("click", function() {
+      state.showPoints = !state.showPoints;
+      renderPoints();
+    });
+    
+    // Quitar la selección al hacer clic en el fondo
+    svg.on("click", function() {
+      state.selectedPoint = null;
+      state.selectedCurve = null;
+      updateSelection();
+    });
+    
+    // Botones para seleccionar curvas completas
+    d3.select("#select-fluid-curve").on("click", function() {
+      selectCurve('fluid');
+    });
+    
+    d3.select("#select-crystal-curve").on("click", function() {
+      selectCurve('crystal');
+    });
+    
+    // Botones para mover la curva seleccionada
+    d3.select("#move-curve-up").on("click", function() {
+      moveCurve(-5); // Valor negativo porque en SVG el eje Y va al revés
+    });
+    
+    d3.select("#move-curve-down").on("click", function() {
+      moveCurve(5);
+    });
+    
+    // Renderizado inicial
+    renderCurves();
+    renderPoints();
+  </script>
+</body>
+</html>

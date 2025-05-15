@@ -9,16 +9,16 @@ const { protect } = require('../middleware/auth');
 // @access  Public
 router.post('/register', async (req, res) => {
   try {
-    // Map front-end field names to model fields
-    const { username, email, password, fullName: nombre, birthDate: fecha_nacimiento } = req.body;
-    // Log data received (without full password)
+    // Map front-end field names to model fields, incluyendo role
+    const { username, email, password, fullName: nombre, birthDate: fecha_nacimiento, role } = req.body;
     console.log('Register attempt:', { 
       username, 
       email, 
       password_length: password?.length, 
       nombre, 
       fecha_nacimiento,
-      fecha_nacimiento_type: fecha_nacimiento ? typeof fecha_nacimiento : 'undefined'
+      fecha_nacimiento_type: fecha_nacimiento ? typeof fecha_nacimiento : 'undefined',
+      role
     });
 
     // Validaciones explícitas
@@ -58,12 +58,13 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Preparar el objeto para crear el usuario
+    // Preparar el objeto para crear el usuario con rol opcional
     const userData = {
       username,
       email,
       password,
       nombre,
+      role: ['admin', 'user'].includes(role) ? role : 'user',
       fecha_registro: Date.now()
     };
     
